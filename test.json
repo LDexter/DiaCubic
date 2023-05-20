@@ -6,9 +6,9 @@
 	"isButton": false,
 	"shapesOn": [],
 	"collideWhenOff": true,
+	"redstoneLevel": 0,
 	"shapesOff": [
-		{ "bounds": [-64, 20, 7, 8, 21, 8], "tint": "FFFFFF", "texture": "sc-peripherals:block/white" },
-		{ "bounds": [-64, 20, 5, -63, 21, 6], "tint": "FFFFFF", "texture": "sc-peripherals:block/white" }
-	],
-	"redstoneLevel": 0
+		{ "bounds": [-64, 0, 7, 8, 1, 8], "texture": "sc-peripherals:block/white", "tint": "FFFFFF" },
+		{ "bounds": [-64, 0, 5, -63, 1, 6], "texture": "sc-peripherals:block/white", "tint": "FFFFFF" }
+	]
 }
