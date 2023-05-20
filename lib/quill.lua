@@ -13,8 +13,19 @@ function quill.scribe(path, mode, input)
         return text
     elseif mode == "w" or mode == "a" or mode == "wb" or mode == "ab" then
         file.write(input)
+    else
+        return ""
     end
     file.close()
+end
+
+
+function quill.scribeJSON(path, mode, input)
+    if mode == "r" or mode == "rb" then
+        return textutils.unserialiseJSON(quill.scribe(path, mode))
+    elseif mode == "w" or mode == "a" or mode == "wb" or mode == "ab" then
+        return quill.scribe(path, mode, textutils.serialiseJSON(input))
+    end
 end
 
 
