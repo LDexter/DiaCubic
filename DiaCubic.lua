@@ -1,3 +1,7 @@
+-- Check quill
+if not fs.exists("/DiaCubic/lib/quill.lua") then
+    error("Library path not found.\n\nPlease clone DiaCubic repo in full:\nhttps://github.com/LDexter/DiaCubic.git", 0)
+end
 -- Import Pine3D and quill
 package.path = "/DiaCubic/?.lua;" .. package.path
 local Pine3D = require("lib/Pine3D")

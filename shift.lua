@@ -1,4 +1,7 @@
--- Import quill
+-- Check and import quill
+if not fs.exists("/DiaCubic/lib/quill.lua") then
+    error("Library path not found.\n\nPlease clone DiaCubic repo in full:\nhttps://github.com/LDexter/DiaCubic.git", 0)
+end
 package.path = "/DiaCubic/?.lua;" .. package.path
 local quill = require("lib/quill")
 
@@ -12,7 +15,7 @@ print("Loaded " .. object.label)
 
 -- Determine values
 print("Shift direction (N, S, E, W / U, D):")
-local dir = read()
+local dir = string.upper(read())
 print("Shift distance (<16):")
 local dist = read()
 
@@ -53,3 +56,6 @@ end
 -- print("After E+W: " .. shifted.shapesOff[idxTest].bounds[1])
 -- print("After U+D: " .. shifted.shapesOff[idxTest].bounds[2])
 -- print("After N+S: " .. shifted.shapesOff[idxTest].bounds[3])
+
+-- Write to file
+quill.scribeJSON(pathStart .. filename, "w", shifted)
