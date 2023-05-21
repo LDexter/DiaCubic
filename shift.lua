@@ -38,7 +38,8 @@ if dir == "N" or dir == "S" then idx1 = 3 end
 idx2 = idx1 + 3
 
 -- Determine move distance
-local move = dist
+local move
+if dist < 16 then move = dist else move = 15 end
 if dir == "N" or dir == "W" or dir == "D" then move = -dist end
 
 -- Debug before states
@@ -62,6 +63,9 @@ if object.shapesOn[1] then
         shifted.shapesOn[key].bounds[idx2] = shifted.shapesOn[key].bounds[idx2] + move
     end
 end
+
+-- Display details of movement
+print("Shifted " .. object.label .. " " .. dist .. " blocks " .. dir)
 
 -- Debug after states
 if doDebugStuff then
