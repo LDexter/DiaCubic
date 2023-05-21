@@ -5,12 +5,22 @@ end
 package.path = "/DiaCubic/?.lua;" .. package.path
 local quill = require("lib/quill")
 
--- Get filename
-local filename = ...
-local pathStart = "./"
+-- Set debug state
+local doDebugStuff = false
+local idxTest = 1
+
+-- Get file
+print("File:")
+local file = read(nil, nil, function(str)
+    return fs.complete(str, "", {
+        include_files = true,
+        include_dirs = false,
+        include_hidden = false,
+    })
+end)
 
 -- Read and parse file into table
-local object = quill.scribeJSON(pathStart .. filename, "r")
+local object = quill.scribeJSON(file, "r")
 print("Loaded " .. object.label)
 
 -- Determine values
@@ -31,11 +41,12 @@ idx2 = idx1 + 3
 local move = dist
 if dir == "N" or dir == "W" or dir == "D" then move = -dist end
 
--- Test before states
--- local idxTest = 2
--- print("Before E+W: " .. object.shapesOff[1].bounds[1])
--- print("Before U+D: " .. object.shapesOff[1].bounds[2])
--- print("Before N+S: " .. object.shapesOff[1].bounds[3])
+-- Debug before states
+if doDebugStuff then
+    print("Before E+W: " .. object.shapesOff[idxTest].bounds[1])
+    print("Before U+D: " .. object.shapesOff[idxTest].bounds[2])
+    print("Before N+S: " .. object.shapesOff[idxTest].bounds[3])
+end
 
 -- Shift object
 local shifted = object
@@ -52,10 +63,12 @@ if object.shapesOn[1] then
     end
 end
 
--- Test after states
--- print("After E+W: " .. shifted.shapesOff[idxTest].bounds[1])
--- print("After U+D: " .. shifted.shapesOff[idxTest].bounds[2])
--- print("After N+S: " .. shifted.shapesOff[idxTest].bounds[3])
+-- Debug after states
+if doDebugStuff then
+    print("After E+W: " .. shifted.shapesOff[idxTest].bounds[1])
+    print("After U+D: " .. shifted.shapesOff[idxTest].bounds[2])
+    print("After N+S: " .. shifted.shapesOff[idxTest].bounds[3])
+end
 
 -- Write to file
-quill.scribeJSON(pathStart .. filename, "w", shifted)
+quill.scribeJSON(file, "w", shifted)
