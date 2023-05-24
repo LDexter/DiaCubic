@@ -6,14 +6,30 @@ package.path = "/DiaCubic/?.lua;" .. package.path
 local quill = require("lib/quill")
 
 -- Pull filenames from user input
--- TODO: add autocomplete
-local nameFirst, nameSecond = ...
+-- local fileFirst, fileSecond = ...
+-- Get files
+print("First file:")
+local fileFirst = read(nil, nil, function(str)
+    return fs.complete(str, "", {
+        include_files = true,
+        include_dirs = false,
+        include_hidden = false,
+    })
+end)
+print("Second file:")
+local fileSecond = read(nil, nil, function(str)
+    return fs.complete(str, "", {
+        include_files = true,
+        include_dirs = false,
+        include_hidden = false,
+    })
+end)
 local pathStart = "./"
 
 -- Read and parse files into tables
-local jsonFirst = quill.scribe(pathStart .. nameFirst, "r")
+local jsonFirst = quill.scribe(pathStart .. fileFirst, "r")
 -- local tblFirst = textutils.unserialiseJSON(jsonFirst)
-local jsonSecond = quill.scribe(pathStart .. nameSecond, "r")
+local jsonSecond = quill.scribe(pathStart .. fileSecond, "r")
 local tblSecond = textutils.unserialiseJSON(jsonSecond)
 
 --? Could not find solution to control ordering of JSON items after serialisation
@@ -28,7 +44,7 @@ local jsonFrame = textutils.serialiseJSON(tblSecond.shapesOff)
 jsonFirst = quill.replace(jsonFirst, "\"shapesOn\": []", "\"shapesOn\": " .. jsonFrame)
 
 -- Overwrite first file as main
-quill.scribe(pathStart..nameFirst, "w", jsonFirst)
+quill.scribe(pathStart..fileFirst, "w", jsonFirst)
 
 -- Print results
-print("Bound "..nameSecond.." to "..nameFirst.." as the second frame.")
+print("Bound "..fileSecond.." to "..fileFirst.." as the second frame.")

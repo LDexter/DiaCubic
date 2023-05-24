@@ -6,12 +6,20 @@ package.path = "/DiaCubic/?.lua;" .. package.path
 local quill = require("lib/quill")
 
 -- Pull filenames from user input
--- TODO: add autocomplete
-local nameMain = ...
-local pathStart = "./DiaCubic/"
+-- local file = ...
+-- Get file
+print("File:")
+local file = read(nil, nil, function(str)
+    return fs.complete(str, "./DiaCubic/", {
+        include_files = true,
+        include_dirs = false,
+        include_hidden = false,
+    })
+end)
+local pathStart = ""
 
 -- Read and parse files into tables
-local jsonMain = quill.scribe(pathStart .. nameMain, "r")
+local jsonMain = quill.scribe(pathStart .. file, "r")
 local tblMain = textutils.unserialiseJSON(jsonMain)
 
 -- Create tables for shapes
