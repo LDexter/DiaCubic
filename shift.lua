@@ -126,5 +126,5 @@ if doDebugStuff then
     print("First after N/S: " .. shifted.shapesOff[idxTest1].bounds[6] .. " Sec after N/S: " .. shifted.shapesOff[idxTest2].bounds[6])
 end
 
--- Write to file
+-- Overwrite file
 quill.scribeJSON(file, "w", shifted)
