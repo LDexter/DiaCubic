@@ -5,10 +5,9 @@ end
 package.path = "/DiaCubic/?.lua;" .. package.path
 local quill = require("lib/quill")
 
--- Pull filenames from user input
-local textureName, replaceName = ...
-local texture = "minecraft:block/"..textureName
-local replace = "minecraft:block/" .. replaceName
+-- Set debug state
+local doDebugStuff = false
+
 -- Get file
 print("File:")
 local file = read(nil, nil, function(str)
@@ -18,14 +17,40 @@ local file = read(nil, nil, function(str)
         include_hidden = false,
     })
 end)
-local pathStart = "./"
 
 -- Read and parse file into table
-local jsonTarget = quill.scribe(pathStart .. file, "r")
-local tblTarget = textutils.unserialiseJSON(jsonTarget)
+local object = quill.scribeJSON(file, "r")
+print("Loaded " .. object.label)
 
--- Replace all occurrences of provided texture with new texture
-jsonTarget = quill.replace(jsonTarget, texture, replace)
-quill.scribe(pathStart..file, "w", jsonTarget)
+-- Move hexcodes to tint
+if object.shapesOff[1] then
+    for key, _ in pairs(object.shapesOff) do
+        local material = object.shapesOff[key].texture
+        local idxBlock = string.find(material, "block")
+        local idxHash = string.find(material, "#")
+        if idxHash then
+            local block = string.sub(material, idxBlock + 6, idxHash - 1)
+            local hex = string.upper(string.sub(material, idxHash + 1))
+            print("Block: " .. block .. " Hexcode: " .. hex)
+            object.shapesOff[key].tint = hex
+            object.shapesOff[key].texture = string.sub(material, 1, idxHash - 1)
+        end
+    end
+end
+if object.shapesOn[1] then
+    for key, _ in pairs(object.shapesOn) do
+        local material = object.shapesOn[key].texture
+        local idxBlock = string.find(material, "block")
+        local idxHash = string.find(material, "#")
+        if idxHash then
+            local block = string.sub(material, idxBlock + 6, idxHash - 1)
+            local hex = string.upper(string.sub(material, idxHash + 1))
+            print("Block: " .. block .. " Hexcode: " .. hex)
+            object.shapesOn[key].tint = hex
+            object.shapesOn[key].texture = string.sub(material, 1, idxHash - 1)
+        end
+    end
+end
 
-print("Replaced all traces of "..textureName.." with "..replaceName)
+-- Overwrite file
+quill.scribeJSON(file, "w", object)
