@@ -26,25 +26,56 @@ local fileSecond = read(nil, nil, function(str)
 end)
 local pathStart = "./"
 
+-- Get options
+print("Choose frame 1/2 (state off/on):")
+local frame = read()
+print("Replace chosen frame? (y/n):")
+local replace = read()
+
+-- Translate to boolean
+local isReplace = false
+if replace == "y" then
+    isReplace = true
+end
+
 -- Read and parse files into tables
-local jsonFirst = quill.scribe(pathStart .. fileFirst, "r")
--- local tblFirst = textutils.unserialiseJSON(jsonFirst)
-local jsonSecond = quill.scribe(pathStart .. fileSecond, "r")
-local tblSecond = textutils.unserialiseJSON(jsonSecond)
+-- Read and parse file into table
+local objFinal = quill.scribeJSON(fileFirst, "r")
+local objToCopy = quill.scribeJSON(fileSecond, "r")
+print("Loaded " .. objFinal.label.." to receive "..objToCopy.label)
 
---? Could not find solution to control ordering of JSON items after serialisation
--- Write second table shapes into first
--- tblFirst.shapesOn = tblSecond.shapesOff
+local frameText = ""
+if frame == 1 then
+    if isReplace or not objFinal.shapesOff[1] then
+        objFinal.shapesOff = objToCopy.shapesOff
+    else
+        for _, value in pairs(objToCopy.shapesOff) do
+            table.insert(objFinal.shapesOff, value)
+        end
+    end
+    frameText = "first"
+
+else
+    if isReplace or not objFinal.shapesOn[1] then
+        objFinal.shapesOn = objToCopy.shapesOff
+    else
+        for _, value in pairs(objToCopy.shapesOff) do
+            table.insert(objFinal.shapesOn, value)
+        end
+    end
+    frameText = "second"
+end
+-- Write copy object shapes over final
 -- Parse back and overwrite
--- jsonFirst = textutils.serialiseJSON(tblFirst)
 
--- Serialise first frame of second table
-local jsonFrame = textutils.serialiseJSON(tblSecond.shapesOff)
--- Write into second frame of first table
-jsonFirst = quill.replace(jsonFirst, "\"shapesOn\": []", "\"shapesOn\": " .. jsonFrame)
 
--- Overwrite first file as main
-quill.scribe(pathStart..fileFirst, "w", jsonFirst)
+-- -- Serialise first frame of second table
+-- local jsonFrame = textutils.serialiseJSON(tblSecond.shapesOff)
+-- -- Write into second frame of first table
+-- jsonFirst = quill.replace(jsonFirst, "\"shapesOn\": []", "\"shapesOn\": " .. jsonFrame)
+
+-- Overwrite file
+quill.scribeJSON(fileFirst, "w", objFinal)
 
 -- Print results
-print("Bound "..fileSecond.." to "..fileFirst.." as the second frame.")
+print("Bound "..fileSecond.." to "..fileFirst.." as the "..frameText.." frame.")
