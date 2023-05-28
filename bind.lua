@@ -28,7 +28,7 @@ local pathStart = "./"
 
 -- Get options
 print("Choose frame 1/2 (state off/on):")
-local frame = read()
+local frame = tonumber(read())
 print("Replace chosen frame? (y/n):")
 local replace = read()
 
