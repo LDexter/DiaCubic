@@ -10,46 +10,58 @@ local quill = require("lib/quill")
 -- Get file
 print("File:")
 local file = read(nil, nil, function(str)
-    return fs.complete(str, "./DiaCubic/", {
+    return fs.complete(str, "", {
         include_files = true,
         include_dirs = false,
         include_hidden = false,
     })
 end)
-local pathStart = ""
-
--- Read and parse files into tables
-local jsonMain = quill.scribe(pathStart .. file, "r")
-local tblMain = textutils.unserialiseJSON(jsonMain)
-
--- Create tables for shapes
-local tblShapesOff = tblMain.shapesOff
-local tblShapesOn = tblMain.shapesOn
-local xDistsOff = {}
-local xShapesOff = {}
+local pathStart = "./DiaCubic/"
 
 -- Create directory for split files
 fs.makeDir(pathStart .. "splits/")
 
--- Find the X-axis distance of each shape in OFF state
-for key, value in pairs(tblMain.shapesOff) do
-    -- Get the X-axis bounds of the shape
-    local xStart = value.bounds[1]
-    local xEnd = value.bounds[4]
-    local xDiff
 
-    -- Find the difference between the bounds
-    if xStart > xEnd then
-        xDiff = xStart - xEnd
-    else
-        xDiff = xEnd - xStart
+-- Find the X-axis distance of each shape for a state
+local function stateDiff(shapes)
+    local xDists = {}
+    local xShapes = {}
+    for key, value in pairs(shapes) do
+        -- Get the X-axis bounds of the shape
+        local xStart = value.bounds[1]
+        local xEnd = value.bounds[4]
+        local xDiff
+
+        -- Find the difference between the bounds
+        if xStart > xEnd then
+            xDiff = xStart - xEnd
+        else
+            xDiff = xEnd - xStart
+        end
+        xDists[key] = xDiff
+
+        -- Create a named index for each shape
+        xShapes[key] = value
     end
-    xDistsOff[key] = xDiff
-
-    -- Create a named index for each shape
-    xShapesOff[key] = value
+    return xDists, xShapes
 end
 
+-- Read and parse files into tables
+local tblMain = quill.scribeJSON(file, "r")
+
+-- Create tables for shapes
+local tblShapesOff = tblMain.shapesOff
+local tblShapesOn = tblMain.shapesOn
+
+-- Find the X-axis distances for both states
+local xDistsOff, xShapesOff = stateDiff(tblShapesOff)
+local xDistsOn, xShapesOn = stateDiff(tblShapesOn)
+
+print("OFF:")
 for key, value in pairs(xDistsOff) do
+    print(value)
+end
+print("ON:")
+for key, value in pairs(xDistsOn) do
     print(value)
 end

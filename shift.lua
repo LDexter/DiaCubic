@@ -43,6 +43,7 @@ print("")
 -- Determine movement bounaries
 local maxPos = 1
 local minPos = 15
+-- TODO: Refactor into function
 if object.shapesOff[1] then
     for key, _ in pairs(object.shapesOff) do
         local vertex1 = object.shapesOff[key].bounds[idx1]
@@ -100,6 +101,7 @@ end
 
 -- Shift object
 local shifted = object
+-- TODO: Refactor into function
 if object.shapesOff[1] then
     for key, _ in pairs(shifted.shapesOff) do
         shifted.shapesOff[key].bounds[idx1] = shifted.shapesOff[key].bounds[idx1] + move
