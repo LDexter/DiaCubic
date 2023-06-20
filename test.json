@@ -1,19 +1,22 @@
 {
-	"lightLevel": 0,
-	"collideWhenOn": true,
 	"label": "model",
 	"tooltip": "Made with Blockbench",
 	"isButton": false,
-	"shapesOn": [
-		{ "bounds": [-64, 16, 7, 8, 3, 8], "tint": "5DCBC3", "texture": "sc-peripherals:block/white" },
-		{ "bounds": [-64, 6, 5, -63, 4, 6], "tint": "FFFFFF", "texture": "sc-peripherals:block/white" },
-		{ "bounds": [-64, 16, 7, 8, 3, 8], "tint": "5DCBC3", "texture": "sc-peripherals:block/white" },
-		{ "bounds": [-64, 6, 5, -63, 4, 6], "tint": "FFFFFF", "texture": "sc-peripherals:block/white" }
-	],
+	"collideWhenOn": true,
 	"collideWhenOff": true,
+	"lightLevel": 0,
+	"redstoneLevel": 0,
 	"shapesOff": [
-		{ "bounds": [-64, 16, 7, 8, 3, 8], "tint": "5DCBC3", "texture": "sc-peripherals:block/white" },
-		{ "bounds": [-64, 6, 5, -63, 4, 6], "tint": "FFFFFF", "texture": "sc-peripherals:block/white" }
+		{
+			"bounds": [-8, 0, -8, 24, 32, 24],
+			"texture": "sc-peripherals:block/white",
+			"tint": "FFFFFF"
+		},
+		{
+			"bounds": [24, 0, -8, 40, 32, 8],
+			"texture": "sc-peripherals:block/white",
+			"tint": "FFFFFF"
+		}
 	],
-	"redstoneLevel": 0
+	"shapesOn": []
 }
